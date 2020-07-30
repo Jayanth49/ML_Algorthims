@@ -6,7 +6,7 @@ Here I am implementing Surpervised Learning Algorithms
 
 2)Logistic Regression.
 
-3)Some Generalised Linear model.
+3)Some Generalised Linear models.
 
 4)Gaussian Discriminative Analysis.
 
