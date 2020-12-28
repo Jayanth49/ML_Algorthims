@@ -1,4 +1,4 @@
-# Notes
+# Notes(Playing in torch)
 
 ## History
 
@@ -25,4 +25,24 @@
 
 
 ## LA
+
+* 
+
+## Classification Basic
+
+* 
+
+## Regression Basic
+
+* 
+
+## Convnets
+
+* 
+
+### Modern CNNS
+
+
+
+
 
