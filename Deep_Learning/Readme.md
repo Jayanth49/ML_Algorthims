@@ -46,6 +46,21 @@
 
 ### Modern CNNS
 
+* LeNet 
+* AlexNet 
+* ZFNet 
+* GoogLeNet 
+* VGGNet 
+* ResNet 
+* Nin 
+* Densenet 
+* Inception Net.
+* Xception Net.
+
+
+
+
+
 
 
 
