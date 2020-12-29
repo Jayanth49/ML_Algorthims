@@ -38,6 +38,10 @@
 
 ## Convnets
 
+	#### Convolutions and LA
+
+* 
+
 * 
 
 ### Modern CNNS
