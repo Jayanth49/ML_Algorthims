@@ -121,10 +121,18 @@ graph TB
 
 ### AlexNet 
 
+* 
 
 
-* ZFNet 
-* GoogLeNet 
+
+###  ZFNet
+
+###   
+
+### GoogLeNet 
+
+
+
 * VGGNet 
 * ResNet 
 * Nin 
