@@ -121,9 +121,13 @@ graph TB
 
 ### AlexNet 
 
+* Although LeNet achieved good results on early small datasets, the performance and feasibility of training CNNs on larger, more realistic datasets had yet to be established.
+* Traditional methods (using support vectors):
+  * Obtain an interesting dataset. In early days, these datasets required expensive sensors (at the time, 1 megapixel images were state-of-the-art)
+  * Preprocess the dataset with hand-crafted features based on some knowledge of optics, geometry, other analytic tools, and occasionally on the serendipitous discoveries of lucky graduate students.
+  * Feed the data through a standard set of feature extractors such as the SIFT (scale-invariant feature transform) [[Lowe, 2004\]](https://d2l.ai/chapter_references/zreferences.html#lowe-2004), the SURF (speeded up robust features) [[Bay et al., 2006\]](https://d2l.ai/chapter_references/zreferences.html#bay-tuytelaars-van-gool-2006),  HOG (histograms of oriented gradient) [[Dalal & Triggs, 2005\]](https://d2l.ai/chapter_references/zreferences.html#dalal-triggs-2005), [bags of visual words](https://en.wikipedia.org/wiki/Bag-of-words_model_in_computer_vision) or any number of other hand-tuned pipelines.
+  * Dump the resulting representations into your favorite classifier, likely a linear model or kernel method, to train a classifier
 * 
-
-
 
 ###  ZFNet
 
