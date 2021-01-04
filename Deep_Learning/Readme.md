@@ -157,14 +157,31 @@ graph TB
 ###  NiN
 
 * Previous 3 are almost similar design/pattern like extract features exploiting *spatial* structure via a sequence of convolution and pooling layers and then post-process the representations via fully-connected layers.
-*  NiN uses convolutional layers with window shapes of 11×11,5×5,3×3, and the corresponding numbers of output channels are the same as in AlexNet. Each NiN block is followed by a maximum pooling layer with a stride of 2 and a window shape of 3×3.
-*  One significant difference between NiN and AlexNet is that NiN avoids fully-connected layers altogether
-*   Instead, NiN uses an NiN block with a number of output channels equal to the number of label classes, followed by a *global* average pooling layer, yielding a vector of logits.
-* One advantage of NiN’s design is that it significantly reduces the number of required model parameters. However, in practice, this design sometimes requires increased model training time.
-  * **Idea of NiN**:
-    *  
 
-###   
+* NiN uses convolutional layers with window shapes of 11×11,5×5,3×3, and the corresponding numbers of output channels are the same as in AlexNet. Each NiN block is followed by a maximum pooling layer with a stride of 2 and a window shape of 3×3.
+
+* One significant difference between NiN and AlexNet is that NiN avoids fully-connected layers altogether
+
+*  Instead, NiN uses an NiN block with a number of output channels equal to the number of label classes, followed by a *global* average pooling layer, yielding a vector of logits.
+
+* One advantage of NiN’s design is that it significantly reduces the number of required model parameters. However, in practice, this design sometimes requires increased model training time.
+
+  * **Idea of NiN**:
+
+    * The convolution filter in CNN is a generalized linear model (GLM) for the underlying data patch, and we argue that the level of abstraction is low with GLM.(unclear statement)
+    * In NIN, the GLM is replaced with a ”micro network” structure which is a general nonlinear function approximator.
+    * maxout network??
+    * **mlpconv:**
+      * In normal Linear convolution we do convolution and add them up to get a pixel in output, but here we keep a mlp in place of convolution layer.
+
+    * **Global Averaging Pooling:**
+      * In traditional CNN architectures, the feature maps of the last convolution layer are flattened and passed on to one or more fully connected layers, which are then passed on to softmax logistics layer for spitting out class probabilities
+      * and we know that number of parameters here are huge ,and high possibiltiy of overfitting.
+      * the last MLPconv layer produces as many activation maps as the number of classes being predicted. Then, each map is averaged giving rise to the raw scores of the classes. These are then fed to a SoftMax layer to produce the probabilities, totally making FC layers redundant
+      * The mapping between the extracted features and the class scores is more intuitive and direct. The feature can be treated as category confidence.
+      * An implicit advantage is that there are no new parameters to train (unlike the FC layers), leading to less overfitting.
+
+* [implementation_helper](https://stats.stackexchange.com/questions/273486/network-in-network-in-keras-implementation)
 
 ### GoogLeNet 
 
