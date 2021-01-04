@@ -127,9 +127,42 @@ graph TB
   * Preprocess the dataset with hand-crafted features based on some knowledge of optics, geometry, other analytic tools, and occasionally on the serendipitous discoveries of lucky graduate students.
   * Feed the data through a standard set of feature extractors such as the SIFT (scale-invariant feature transform) [[Lowe, 2004\]](https://d2l.ai/chapter_references/zreferences.html#lowe-2004), the SURF (speeded up robust features) [[Bay et al., 2006\]](https://d2l.ai/chapter_references/zreferences.html#bay-tuytelaars-van-gool-2006),  HOG (histograms of oriented gradient) [[Dalal & Triggs, 2005\]](https://d2l.ai/chapter_references/zreferences.html#dalal-triggs-2005), [bags of visual words](https://en.wikipedia.org/wiki/Bag-of-words_model_in_computer_vision) or any number of other hand-tuned pipelines.
   * Dump the resulting representations into your favorite classifier, likely a linear model or kernel method, to train a classifier
-* 
 
-###  ZFNet
+
+
+### VGG net
+
+* Alexnet doesn't provide  a general template to guide subsequent researchers in designing new networks.
+* One VGG block consists of a sequence of convolutional layers, followed by a max pooling layer for spatial downsampling
+
+````python
+	import torch
+	from torch import nn
+    
+    def vgg_block(num_convs, in_channels, out_channels):
+    layers=[]
+    for _ in range(num_convs):
+        layers.append(nn.Conv2d(in_channels, out_channels,
+                                kernel_size=3, padding=1))
+        layers.append(nn.ReLU())
+        in_channels = out_channels
+    layers.append(nn.MaxPool2d(kernel_size=2,stride=2))
+    return nn.Sequential(*layers)
+````
+
+* VGG-11 constructs a network using reusable convolutional blocks. Different VGG models can be defined by the differences in the number of convolutional layers and output channels in each block.
+* The use of blocks leads to very compact representations of the network definition. It allows for efficient design of complex networks.
+* **In particular, here the creators found that several layers of deep and narrow convolutions (i.e., 3*3) were more effective than fewer layers of wider convolutions.**
+
+###  NiN
+
+* Previous 3 are almost similar design/pattern like extract features exploiting *spatial* structure via a sequence of convolution and pooling layers and then post-process the representations via fully-connected layers.
+*  NiN uses convolutional layers with window shapes of 11×11,5×5,3×3, and the corresponding numbers of output channels are the same as in AlexNet. Each NiN block is followed by a maximum pooling layer with a stride of 2 and a window shape of 3×3.
+*  One significant difference between NiN and AlexNet is that NiN avoids fully-connected layers altogether
+*   Instead, NiN uses an NiN block with a number of output channels equal to the number of label classes, followed by a *global* average pooling layer, yielding a vector of logits.
+* One advantage of NiN’s design is that it significantly reduces the number of required model parameters. However, in practice, this design sometimes requires increased model training time.
+  * **Idea of NiN**:
+    *  
 
 ###   
 
