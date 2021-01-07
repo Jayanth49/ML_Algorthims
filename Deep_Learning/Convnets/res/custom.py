@@ -87,18 +87,19 @@ def load_data_fashion_mnist(batch_size, resize=None):
         root="../data", train=True, transform=trans, download=True)
     mnist_test = torchvision.datasets.FashionMNIST(
         root="../data", train=False, transform=trans, download=True)
+    print("data")
     return (data.DataLoader(mnist_train, batch_size, shuffle=True,
-                            num_workers=get_dataloader_workers()),
+                            num_workers=0),
             data.DataLoader(mnist_test, batch_size, shuffle=False,
-                            num_workers=get_dataloader_workers()))
+                            num_workers=0))
 
 
 def accuracy(y_hat, y):
     """Compute the number of correct predictions."""
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
-        y_hat = torch.argmax(y_hat, axis=1)        
-    cmp = torch.astype(y_hat, y.dtype) == y
-    return float(torch.reduce_sum(torch.astype(cmp, y.dtype)))
+        y_hat = argmax(y_hat, axis=1)        
+    cmp = astype(y_hat, y.dtype) == y
+    return float(reduce_sum(astype(cmp, y.dtype)))
 
 def evaluate_accuracy(net, data_iter):
     """Compute the accuracy for a model on a dataset."""
@@ -106,7 +107,7 @@ def evaluate_accuracy(net, data_iter):
         net.eval()  # Set the model to evaluation mode
     metric = Accumulator(2)  # No. of correct predictions, no. of predictions
     for X, y in data_iter:
-        metric.add(accuracy(net(X), y), torch.size(y))
+        metric.add(accuracy(net(X), y), size(y))
     return metric[0] / metric[1]
 
 def evaluate_accuracy_gpu(net, data_iter, device=None):
@@ -124,7 +125,7 @@ def evaluate_accuracy_gpu(net, data_iter, device=None):
         else:
             X = X.to(device)
         y = y.to(device)
-        metric.add(accuracy(net(X), y), torch.size(y))
+        metric.add(accuracy(net(X), y), size(y))
     return metric[0] / metric[1]
 
     
@@ -139,7 +140,7 @@ def training_conv(net, train_iter, test_iter, num_epochs, lr):
     net.to(device)
     optimizer = torch.optim.SGD(net.parameters(), lr=lr)
     loss = nn.CrossEntropyLoss()
-    num_batches = len(train_iter)
+    # num_batches = len(train_iter)
     for epoch in range(num_epochs):
         # Sum of training loss, sum of training accuracy, no. of examples
         metric = Accumulator(3)
@@ -156,5 +157,39 @@ def training_conv(net, train_iter, test_iter, num_epochs, lr):
             train_l = metric[0] / metric[2]
             train_acc = metric[1] / metric[2]
         test_acc = evaluate_accuracy_gpu(net, test_iter)
-    print(f'loss {train_l:.3f}, train acc {train_acc:.3f}, '
+        print(epoch)
+        print(f'loss {train_l:.3f}, train acc {train_acc:.3f}, '
           f'test acc {test_acc:.3f}')
+
+
+astype = lambda x, *args, **kwargs: x.type(*args, **kwargs)
+ones = torch.ones
+zeros = torch.zeros
+tensor = torch.tensor
+arange = torch.arange
+meshgrid = torch.meshgrid
+sin = torch.sin
+sinh = torch.sinh
+cos = torch.cos
+cosh = torch.cosh
+tanh = torch.tanh
+linspace = torch.linspace
+exp = torch.exp
+log = torch.log
+normal = torch.normal
+rand = torch.rand
+matmul = torch.matmul
+int32 = torch.int32
+float32 = torch.float32
+concat = torch.cat
+stack = torch.stack
+abs = torch.abs
+eye = torch.eye
+numpy = lambda x, *args, **kwargs: x.detach().numpy(*args, **kwargs)
+size = lambda x, *args, **kwargs: x.numel(*args, **kwargs)
+reshape = lambda x, *args, **kwargs: x.reshape(*args, **kwargs)
+to = lambda x, *args, **kwargs: x.to(*args, **kwargs)
+reduce_sum = lambda x, *args, **kwargs: x.sum(*args, **kwargs)
+argmax = lambda x, *args, **kwargs: x.argmax(*args, **kwargs)
+astype = lambda x, *args, **kwargs: x.type(*args, **kwargs)
+transpose = lambda x, *args, **kwargs: x.t(*args, **kwargs)
