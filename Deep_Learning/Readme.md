@@ -22,6 +22,13 @@
 
 * Hierarchy in representation
 
+## Batch Normalization
+
+* For Fully Connected-Layers
+  * When applying batch normalization to fully-connected layers, the original paper inserts batch normalization after the affine transformation and before the nonlinear activation function.
+  * (later applications may insert batch normalization right after activation functions)
+  * 
+
 
 
 ## LA
@@ -246,14 +253,21 @@ graph TB
 
 * GoogLeNet uses a stack of a total of 9 inception blocks and global average pooling to generate its estimates. Maximum pooling between inception blocks reduces the dimensionality.
 
-  
+* The Inception block is equivalent to a subnetwork with four paths. It extracts information in parallel through convolutional layers of different window shapes and maximum pooling layers. 1×11×1 convolutions reduce channel dimensionality on a per-pixel level. Maximum pooling reduces the resolution.
+
+* GoogLeNet connects multiple well-designed Inception blocks with other layers in series. The ratio of the number of channels assigned in the Inception block is obtained through a large number of experiments on the ImageNet dataset.
+
+* GoogLeNet, as well as its succeeding versions, was one of the most efficient models on ImageNet, providing similar test accuracy with lower computational complexity.
+
+
+
+### ResNet
 
 
 
 
 
-* ResNet 
-* Densenet 
+### Densenet 
 * Inception Net.
 * Xception Net.
 
