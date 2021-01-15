@@ -25,6 +25,11 @@ url = 'http://d2l-data.s3-accelerate.amazonaws.com/'
 Data['time_machine'] = (url + 'timemachine.txt',
                                 '090b5e7e70c295757f55df93cb0a180b9691891a')
 
+def load_array(data_arrays, batch_size, is_train=True):
+    """Construct a PyTorch data iterator."""
+    dataset = data.TensorDataset(*data_arrays)
+    return data.DataLoader(dataset, batch_size, shuffle=is_train)
+
 def download(name ,cache_dir=os.path.join('..', 'data')):
     assert name in Data, f"{name} does not exist in {Data}."
     url, sha1_hash = Data[name]
@@ -323,4 +328,11 @@ def train_ch8(net, train_iter, vocab, lr, num_epochs, device,
     
 
 
-
+numpy = lambda x, *args, **kwargs: x.detach().numpy(*args, **kwargs)
+size = lambda x, *args, **kwargs: x.numel(*args, **kwargs)
+reshape = lambda x, *args, **kwargs: x.reshape(*args, **kwargs)
+to = lambda x, *args, **kwargs: x.to(*args, **kwargs)
+reduce_sum = lambda x, *args, **kwargs: x.sum(*args, **kwargs)
+argmax = lambda x, *args, **kwargs: x.argmax(*args, **kwargs)
+astype = lambda x, *args, **kwargs: x.type(*args, **kwargs)
+transpose = lambda x, *args, **kwargs: x.t(*args, **kwargs)
