@@ -329,10 +329,10 @@ def train_ch8(net, train_iter, vocab, lr, num_epochs, device,
 
 
 numpy = lambda x, *args, **kwargs: x.detach().numpy(*args, **kwargs)
+transpose = lambda x, *args, **kwargs: x.t(*args, **kwargs)
 size = lambda x, *args, **kwargs: x.numel(*args, **kwargs)
 reshape = lambda x, *args, **kwargs: x.reshape(*args, **kwargs)
 to = lambda x, *args, **kwargs: x.to(*args, **kwargs)
 reduce_sum = lambda x, *args, **kwargs: x.sum(*args, **kwargs)
 argmax = lambda x, *args, **kwargs: x.argmax(*args, **kwargs)
 astype = lambda x, *args, **kwargs: x.type(*args, **kwargs)
-transpose = lambda x, *args, **kwargs: x.t(*args, **kwargs)
