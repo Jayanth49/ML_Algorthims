@@ -1,0 +1,12 @@
+ * The nonvolitional cue is based on the saliency and conspicuity of objects in the 
+   environment.
+ * Using the volitional cue based on variable selection criteria, this form of 
+   attention is more deliberate. It is also more powerful with the subject’s 
+   voluntary effort.
+ * To bias selection over sensory inputs, we can simply use a parameterized 
+   fully-connected layer or even non-parameterized max or average pooling.
+ * we refer to volitional cues as queries
+ * Given any query, attention mechanisms bias selection over sensory inputs (e.g., intermediate feature representations) via attention pooling
+ * These sensory inputs are called values in the context of attention mechanisms
+ * 
+
