@@ -51,6 +51,20 @@ def download(name ,cache_dir=os.path.join('..', 'data')):
         f.write(r.content)
     return fname
 
+def download_extract(name, folder=None):
+    """Download and extract a zip/tar file."""
+    fname = download(name)
+    base_dir = os.path.dirname(fname)
+    data_dir, ext = os.path.splitext(fname)
+    if ext == '.zip':
+        fp = zipfile.ZipFile(fname, 'r')
+    elif ext in ('.tar', '.gz'):
+        fp = tarfile.open(fname, 'r')
+    else:
+        assert False, 'Only zip/tar files can be extracted.'
+    fp.extractall(base_dir)
+    return os.path.join(base_dir, folder) if folder else data_dir
+
 def read_time_machine():  #@save
     """Load the time machine dataset into a list of text lines."""
     with open(download('time_machine'), 'r') as f:
