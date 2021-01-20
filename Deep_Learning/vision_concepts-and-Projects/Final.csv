@@ -2,7 +2,7 @@ image_id,label
 10000.jpg,False
 10001.jpg,False
 10002.jpg,True
-10003.jpg,True
+10003.jpg,False
 10004.jpg,True
 10005.jpg,True
 10006.jpg,False
@@ -62,7 +62,7 @@ image_id,label
 10060.jpg,False
 10061.jpg,False
 10062.jpg,False
-10063.jpg,True
+10063.jpg,False
 10064.jpg,False
 10065.jpg,False
 10066.jpg,True
@@ -258,7 +258,7 @@ image_id,label
 10256.jpg,False
 10257.jpg,True
 10258.jpg,False
-10259.jpg,True
+10259.jpg,False
 10260.jpg,False
 10261.jpg,False
 10262.jpg,True
@@ -409,7 +409,7 @@ image_id,label
 10407.jpg,False
 10408.jpg,False
 10409.jpg,False
-10410.jpg,True
+10410.jpg,False
 10411.jpg,False
 10412.jpg,False
 10413.jpg,False
@@ -503,7 +503,7 @@ image_id,label
 10501.jpg,False
 10502.jpg,False
 10503.jpg,False
-10504.jpg,True
+10504.jpg,False
 10505.jpg,True
 10506.jpg,False
 10507.jpg,True
@@ -614,7 +614,7 @@ image_id,label
 10612.jpg,False
 10613.jpg,True
 10614.jpg,False
-10615.jpg,True
+10615.jpg,False
 10616.jpg,False
 10617.jpg,False
 10618.jpg,False
@@ -701,7 +701,7 @@ image_id,label
 10699.jpg,False
 10700.jpg,False
 10701.jpg,False
-10702.jpg,True
+10702.jpg,False
 10703.jpg,False
 10704.jpg,True
 10705.jpg,True
@@ -742,7 +742,7 @@ image_id,label
 10740.jpg,False
 10741.jpg,False
 10742.jpg,False
-10743.jpg,True
+10743.jpg,False
 10744.jpg,False
 10745.jpg,False
 10746.jpg,False
