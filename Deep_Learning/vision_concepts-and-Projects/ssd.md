@@ -90,4 +90,41 @@
       * That **on an image of size `H, W` with `I` input channels, a fully connected layer of output size `N` is equivalent to a convolutional layer with kernel size equal to the image size `H, W` and `N` output channels**, provided that the parameters of the fully connected network `N, H * W * I` are the same as the parameters of the convolutional layer `N, H, W, I`.
       * Therefore, any fully connected layer can be converted to an equivalent convolutional layer simply **by reshaping its parameters**.
       * ![](ssd.assets/fC_FC.jpg)
-      * 
+
+    * Thus:
+
+    * We now know how to convert `fc6` and `fc7` in the original VGG-16 architecture into `conv6` and `conv7` respectively.
+
+    * In the ImageNet VGG-16 shown previously, which operates on images of size `224, 224, 3`, you can see that the output of `conv5_3` will be of size `7, 7, 512`. Therefore –
+
+      * `fc6` with a flattened input size of `7 * 7 * 512` and an output size of `4096` has parameters of dimensions `4096, 7 * 7 * 512`. **The equivalent convolutional layer `conv6` has a `7, 7` kernel size and `4096` output channels, with reshaped parameters of dimensions `4096, 7, 7, 512`.**
+      * `fc7` with an input size of `4096` (i.e. the output size of `fc6`) and an output size `4096` has parameters of dimensions `4096, 4096`. The input could be considered as a `1, 1` image with `4096` input channels. **The equivalent convolutional layer `conv7` has a `1, 1` kernel size and `4096` output channels, with reshaped parameters of dimensions `4096, 1, 1, 4096`.**
+
+    * We can see that `conv6` has `4096` filters, each with dimensions `7, 7, 512`, and `conv7` has `4096` filters, each with dimensions `1, 1, 4096`.
+
+    * These filters are numerous and large – and computationally expensive, authors opt to **reduce both their number and the size of each filter by subsampling parameters** from the converted convolutional layers.Thus
+
+      * `conv6` will use `1024` filters, each with dimensions `3, 3, 512`. Therefore, the parameters are subsampled from `4096, 7, 7, 512` to `1024, 3, 3, 512`.
+      * `conv7` will use `1024` filters, each with dimensions `1, 1, 1024`. Therefore, the parameters are subsampled from `4096, 1, 1, 4096` to `1024, 1, 1, 1024`.
+
+    * Based on the references in the paper, we will **subsample by picking every `m`th parameter along a particular dimension**, in a process known as [*decimation*](https://en.wikipedia.org/wiki/Downsampling_(signal_processing)).
+
+    * Since the kernel of `conv6` is decimated from `7, 7` to `3, 3` by keeping only every 3rd value, there are now *holes* in the kernel. Therefore, we would need to **make the kernel dilated or \*atrous\***.This corresponds to a dilation of `3` (same as the decimation factor `m = 3`). However, the authors actually use a dilation of `6`, possibly because the 5th pooling layer no longer halves the dimensions of the preceding feature map.
+
+    * Our Base Network:
+
+      ![](ssd.assets/base-network.png)
+
+  
+
+  * ### Auxiliary Convolutions:
+
+    * We will now **stack some more convolutional layers on top of our base network**. These convolutions provide additional feature maps, each progressively smaller than the last.
+
+      
+
+![](ssd.assets/Auxilary.jpg)
+
+​	
+
+* 
