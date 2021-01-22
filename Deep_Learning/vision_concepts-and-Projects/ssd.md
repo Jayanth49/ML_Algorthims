@@ -61,7 +61,9 @@
     * ![](ssd.assets/vgg16.png)
 
     * Creaters of SSD recommend using one that's pretrained on the *ImageNet Large Scale Visual Recognition Competition (ILSVRC)* classification task as base convolution.
+
     * As per the paper, **we've to make some changes to this pretrained network** to adapt it to our own challenge of object detection. Some are logical and necessary, while others are mostly a matter of convenience or preference.
+
       * Input image is `3,300,300`
       * **Note**: let image be n,m if we pad with 1 and do 3,3 convolution then (n,m)+2(padding)-2(convolution) = n,m.Thus no change in shape of image.
       * Thus in above network size decreases only due to pooling.
@@ -71,4 +73,21 @@
       * At 4th Pooling we output `512,19,19`
       * We modify the **5th pooling layer** from a `2, 2` kernel and `2` stride to a `3, 3` kernel and `1` stride. The effect this has is it no longer halves the dimensions of the feature map from the preceding convolutional layer.
       * We don't need the fully connected (i.e. classification) layers because they serve no purpose here. We will toss `fc8` away completely, but choose to **rework `fc6` and `fc7` into convolutional layers `conv6` and `conv7`**.
+
+    * ### FC → Convolutional Layer
+
+      * In the typical image classification setting, the first fully connected layer cannot operate on the preceding feature map or image *directly*. We'd need to flatten it into a 1D structure.
+      * ![](ssd.assets/FC.jpg)
+
+      * In this example, there's an image of dimensions `2, 2, 3`, flattened to a 1D vector of size `12`. For an output of size `2`, the fully connected layer computes two dot-products of this flattened image with two vectors of the same size `12`. **These two vectors, shown in gray, are the parameters of the fully connected layer.**
+      * ![](ssd.assets/Scene2.jpg)
+
+      * Here, the image of dimensions `2, 2, 3` need not be flattened, obviously. The convolutional layer uses two filters with `12` elements in the same shape as the image to perform two dot products. **These two filters, shown in gray, are the parameters of the convolutional layer.**
+      * But here's the key part – **in both scenarios, the outputs `Y_0` and `Y_1` are the same!**
+      * ![](ssd.assets/result.jpg)
+
+      * The two scenarios are equivalent
+      * That **on an image of size `H, W` with `I` input channels, a fully connected layer of output size `N` is equivalent to a convolutional layer with kernel size equal to the image size `H, W` and `N` output channels**, provided that the parameters of the fully connected network `N, H * W * I` are the same as the parameters of the convolutional layer `N, H, W, I`.
+      * Therefore, any fully connected layer can be converted to an equivalent convolutional layer simply **by reshaping its parameters**.
+      * ![](ssd.assets/fC_FC.jpg)
       * 
