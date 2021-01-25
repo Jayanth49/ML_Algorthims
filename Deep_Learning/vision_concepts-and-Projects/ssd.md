@@ -138,4 +138,4 @@ Reference: [Tutorial on SSD](https://github.com/sgrvinod/a-PyTorch-Tutorial-to-O
   * **Some key-notes:**
     * **they will be applied to various low-level and high-level feature maps**, viz. those from `conv4_3`, `conv7`, `conv8_2`, `conv9_2`, `conv10_2`, and `conv11_2`. These are the same feature maps indicated on the figures before.
     * **f a prior has a scale `s`, then its area is equal to that of a square with side `s`**. The largest feature map, `conv4_3`, will have priors with a scale of `0.1`, i.e. `10%` of image's dimensions, while the rest have priors with scales linearly increasing from `0.2` to `0.9`. As you can see, larger feature maps have priors with smaller scales and are therefore ideal for detecting smaller objects.
-  * 
+  * ,,,,,,,,,,,,,,,,,,,,,
