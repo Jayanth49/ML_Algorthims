@@ -215,6 +215,81 @@ def find_interection(set_1,set_2):
     
     intersection_dims = torch.clamp(upper_bounds - lower_bounds, min=0)  # (n1, n2, 2)
     return intersection_dims[:, :, 0] * intersection_dims[:, :, 1]  # (n1, n2)
+
+
+def find_jaccard_overlap(set_1, set_2):
+    """
+    Find the Jaccard Overlap (IoU) of every box combination between two sets of boxes that are in boundary coordinates.
+    
+    :param set_1: set 1, a tensor of dimensions (n1, 4)
+    :param set_2: set 2, a tensor of dimensions (n2, 4)
+    :return: Jaccard Overlap of each of the boxes in set 1 with respect to each of the boxes in set 2, a tensor of dimensions (n1, n2)
+    """
+    
+    # Finding Intersection
+    
+    intersection = find_interection(set_1,set_2)
+    
+    # Finding area of each both in both sets
+    
+    area_set_1 = (set_1[:,2]-set_1[:,0])*(set_1[:,3]-set_1[:,1])
+    area_set_2 = (set_2[:,2]-set_2[:,0])*(set_2[:,3]-set_2[:,1])
+        
+    union = area_set_1.unsqueeze(1) + area_set_2.unsqueeze(0) - intersection
+    
+    return intersection/union 
+
+
+# Some augmentation functions below have been adapted from
+# From https://github.com/amdegroot/ssd.pytorch/blob/master/utils/augmentations.py
+    
+def expand(image,boxes,filler):
+    """
+    Perform a zooming out operation by placing the image in a larger canvas of filler material.
+    
+    Helps to learn to detect smaller objects.
+    
+    :param image: image, a tensor of dimensions (3, original_h, original_w)
+    :param boxes: bounding boxes in boundary coordinates, a tensor of dimensions (n_objects, 4)
+    :param filler: RBG values of the filler material, a list like [R, G, B]
+    :return: expanded image, updated bounding box coordinates
+    """
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
         
         
