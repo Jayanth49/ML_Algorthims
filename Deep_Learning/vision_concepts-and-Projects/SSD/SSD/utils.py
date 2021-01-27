@@ -261,8 +261,8 @@ def expand(image,boxes,filler):
     
     max_scale = 4
     scale = random.uniform(1,max_scale)
-    new_h = int(original_h*max_scale)
-    new_w = int(original_w*max_scale)
+    new_h = int(original_h*scale)
+    new_w = int(original_w*scale)
     
     # Creating such imae with filler
     filler = torch.FloatTensor(filler)
@@ -275,9 +275,66 @@ def expand(image,boxes,filler):
     bottom = top+original_h
     new_image[:,top:bottom,left:right] = image
 
-    # Adjusting bounding boxes
-        
+    # Adjusting bounding boxes-just shifting
+    new_boxes = boxes + torch.FloatTensor([left,right,top,bottom]).unsqueeze(0)
     
+    return new_image,new_boxes
+    
+def random_crop(image,boxes,labels,difficulties):
+    """
+    Performs a random crop in the manner stated in the paper. Helps to learn to detect larger and partial objects.
+    
+    Note that some objects may be cut out entirely.
+    
+    Adapted from https://github.com/amdegroot/ssd.pytorch/blob/master/utils/augmentations.py
+    :param image: image, a tensor of dimensions (3, original_h, original_w)
+    :param boxes: bounding boxes in boundary coordinates, a tensor of dimensions (n_objects, 4)
+    :param labels: labels of objects, a tensor of dimensions (n_objects)
+    :param difficulties: difficulties of detection of these objects, a tensor of dimensions (n_objects)
+    :return: cropped image, updated bounding box coordinates, updated labels, updated difficulties
+    """
+    
+    original_h = image.size(1)
+    original_w = image.size(2)
+    
+    # choosing minimum overlap until successful crop is made
+    while True:
+        # Randomly draw value for minimum overlap
+        
+        min_overlap = random.choice([.1,.3,.5,.7,.9,.0,None]) # None implies no crop
+        
+        # if no cropping
+        if min_overlap is None:
+            return image,boxes,labels,difficulties
+        
+        # Try up to 50 times for this choice of minimum overlap
+        # This isn't mentioned in the paper, of course, but 50 is chosen in paper authors' original Caffe repo
+        
+        max_trials = 50
+        for _ in range(max_trials):
+            # Crop dimensions must be in [0.3, 1] of original dimensions
+            min_scale = 0.3
+            
+            scale_h = random.uniform(min_scale,1)
+            scale_w = random.uniform(min_scale,1)
+            new_h = int(original_h*scale_h)
+            new_w = int(original_w*scale_w)
+            
+            # Aspect ratio be in [0.5,1]
+            aspect_ratio = new_h/new_w
+            if not 0.5 < aspect_ratio < 2:
+                continue
+            
+            # Crop coordinates (origin at top-left of image)
+            left = random.randint(0, original_w - new_w)
+            right = left + new_w
+            top = random.randint(0, original_h - new_h)
+            bottom = top + new_h
+            crop = torch.FloatTensor([left, top, right, bottom]
+                                     
+            overlap = find_jaccard_overlap(crop.unsqueeze(0), boxes)
+            
+            
     
     
     
