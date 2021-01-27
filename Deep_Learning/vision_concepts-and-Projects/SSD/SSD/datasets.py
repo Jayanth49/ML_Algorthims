@@ -8,14 +8,14 @@ Created on Wed Jan 27 14:40:08 2021
 
 import torch
 from torch.utils.data import Dataset
-import json
 
+import json
 import os
 from PIL import Image
 from utils import transform
 
 
-class PascalVOCDataset(DataSet):
+class PascalVOCDataset(Dataset):
     """
     A PyTorch Dataset class to be used in a PyTorch DataLoader to create batches.
     """
