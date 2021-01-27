@@ -255,6 +255,28 @@ def expand(image,boxes,filler):
     :return: expanded image, updated bounding box coordinates
     """
     
+    # Original dimensions
+    original_h = image.size(1)
+    original_w = image.size(2)
+    
+    max_scale = 4
+    scale = random.uniform(1,max_scale)
+    new_h = int(original_h*max_scale)
+    new_w = int(original_w*max_scale)
+    
+    # Creating such imae with filler
+    filler = torch.FloatTensor(filler)
+    new_image = torch.ones((3,new_h,new_w),dtype=torch.float)*filler.unsqueeze(1).unsqueeze(1)
+    
+    # Place the original image at random coordinates in this new image (origin at top-left of image)
+    left = random.randint(0,new_w-original_w)
+    right = left+original_w
+    top = random.randint(0,new_h-original_h)
+    bottom = top+original_h
+    new_image[:,top:bottom,left:right] = image
+
+    # Adjusting bounding boxes
+        
     
     
     
