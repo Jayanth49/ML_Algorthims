@@ -272,6 +272,70 @@ class PredictionConvolutions(nn.Module):
             
             batch_size = conv4_3_feats.size(0)
             
+            # predict localization boxes bounds (offsets wrt to bounding boxes):
+            l_conv4_3 = self.loc_conv4_3(conv4_3_feats) # (N, 16, 38, 38)
+            l_conv4_3 = l_conv4_3.permute(0,2,3,1).contiguous() # (N, 38, 38, 16), to match prior-box order (after .view())
+            # (.contiguous() ensures it is stored in a contiguous chunk of memory, needed for .view() below)
+            l_conv4_3 = l_conv4_3.view(batch_size,-1,4) # (N, 5776, 4)
+            
+            l_conv7 = self.loc_conv7(conv7_feats) # (N, 24, 19, 19)
+            l_conv7 = l_conv7.permute(0,2,3,1).contiguous() # (N, 19, 19, 24)
+            l_conv7 = l_conv7.view(batch_size,-1,4) # (N, 2166, 4)
+            
+            l_conv8_2 = self.loc_conv8_2(conv8_2_feats) # (N, 24, 10, 10)
+            l_conv8_2 = l_conv8_2.permute(0,2,3,1).contiguous() # (N, 10, 10, 24)
+            l_conv8_2 = l_conv8_2.view(batch_size,-1,4) # (N, 600, 4)
+            
+            l_conv9_2 = self.loc_conv9_2(conv9_2_feats) # (N, 24, 5, 5)
+            l_conv9_2 = l_conv9_2.permute(0,2,3,1).contiguous() # (N, 5, 5, 24)
+            l_conv9_2 = l_conv9_2.view(batch_size,-1,4) # (N, 150, 4)
+            
+            l_conv10_2 = self.loc_conv10_2(conv10_2_feats) # (N, 16, 3, 3)
+            l_conv10_2 = l_conv10_2.permute(0,2,3,1)  # (N, 3, 3, 16)
+            l_conv10_2 = l_conv10_2.view(batch_size,-1,4) # (N, 36, 4)
+            
+            l_conv11_2 = self.loc_conv11_2(conv11_2_feats) # (N, 16, 1, 1)
+            l_conv11_2 = l_conv11_2.permute(0,2,3,1) # (N, 1, 1, 16)
+            l_conv11_2 = l_conv11_2.view(batch_size,-1,4) # (N, 4, 4)
+            
+            #predicting classes in localised boxes
+            c_conv4_3 = self.cl_conv4_3(conv4_3_feats)  # (N, 4 * n_classes, 38, 38)
+            c_conv4_3 = c_conv4_3.permute(0, 2, 3,
+                                          1).contiguous()  # (N, 38, 38, 4 * n_classes), to match prior-box order (after .view())
+            c_conv4_3 = c_conv4_3.view(batch_size, -1,
+                                       self.n_classes)  # (N, 5776, n_classes), there are a total 5776 boxes on this feature map
+    
+            c_conv7 = self.cl_conv7(conv7_feats)  # (N, 6 * n_classes, 19, 19)
+            c_conv7 = c_conv7.permute(0, 2, 3, 1).contiguous()  # (N, 19, 19, 6 * n_classes)
+            c_conv7 = c_conv7.view(batch_size, -1,
+                                   self.n_classes)  # (N, 2166, n_classes), there are a total 2116 boxes on this feature map
+    
+            c_conv8_2 = self.cl_conv8_2(conv8_2_feats)  # (N, 6 * n_classes, 10, 10)
+            c_conv8_2 = c_conv8_2.permute(0, 2, 3, 1).contiguous()  # (N, 10, 10, 6 * n_classes)
+            c_conv8_2 = c_conv8_2.view(batch_size, -1, self.n_classes)  # (N, 600, n_classes)
+    
+            c_conv9_2 = self.cl_conv9_2(conv9_2_feats)  # (N, 6 * n_classes, 5, 5)
+            c_conv9_2 = c_conv9_2.permute(0, 2, 3, 1).contiguous()  # (N, 5, 5, 6 * n_classes)
+            c_conv9_2 = c_conv9_2.view(batch_size, -1, self.n_classes)  # (N, 150, n_classes)
+    
+            c_conv10_2 = self.cl_conv10_2(conv10_2_feats)  # (N, 4 * n_classes, 3, 3)
+            c_conv10_2 = c_conv10_2.permute(0, 2, 3, 1).contiguous()  # (N, 3, 3, 4 * n_classes)
+            c_conv10_2 = c_conv10_2.view(batch_size, -1, self.n_classes)  # (N, 36, n_classes)
+    
+            c_conv11_2 = self.cl_conv11_2(conv11_2_feats)  # (N, 4 * n_classes, 1, 1)
+            c_conv11_2 = c_conv11_2.permute(0, 2, 3, 1).contiguous()  # (N, 1, 1, 4 * n_classes)
+            c_conv11_2 = c_conv11_2.view(batch_size, -1, self.n_classes)  # (N, 4, n_classes)
+            
+            # A total of 8732 boxes
+            # Concatenate in this specific order (i.e. must match the order of the prior-boxes)
+            locs = torch.cat([l_conv4_3,l_conv7,l_conv8_2,l_conv9_2,l_conv10_2,l_conv11_2],dim=1) #(N, 8732, 4)
+            class_scores = torch.cat([c_conv4_3, c_conv7, c_conv8_2, c_conv9_2, c_conv10_2, c_conv11_2],dim=1)  # (N, 8732, n_classes)
+
+            return locs,class_scores
+        
+        
+                        
+            
             
         
         
