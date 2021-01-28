@@ -141,6 +141,7 @@ class VGGBase(nn.Module):
         
         
 class AuxiliaryConvolutions(nn.Module):
+    
     """
     Additional convolutions to produce higher-level feature maps.
     """
@@ -352,9 +353,36 @@ class SSD300(nn.Module):
         self.rescale_factors = nn.Parameter(torch.FloatTensor(1, 512, 1, 1))  # there are 512 channels in conv4_3_feats
         nn.init.constant_(self.rescale_factors, 20)
         
+        # prior boxes
+        self.priors_cxcy = self.create_prior_boxes()
         
+        def forward(self,image):
+            """
+            Forward propagation.
+            
+            :param image: images, a tensor of dimensions (N, 3, 300, 300)
+            :return: 8732 locations and class scores (i.e. w.r.t each prior box) for each image
+            """
+            # Run VGG base network convolutions (lower level feature map generators)
+            conv4_3_feats,conv7_feats = self.base(image)  # (N, 512, 38, 38), (N, 1024, 19, 19)
+            
+            # Rescale conv4_3 after L2 norm
+            norm = conv4_3_feats.pow(2).sum(dim=1, keepdim=True).sqrt()  # (N, 1, 38, 38)
+            conv4_3_feats = conv4_3_feats/norm
+            conv4_3_feats = conv4_3_feats * self.rescale_factors # (N, 512, 38, 38)
+            
+            # Run auxiliary convolutions (higher level feature map generators)
+            conv8_2_feats, conv9_2_feats, conv10_2_feats, conv11_2_feats = \
+            self.aux_convs(conv7_feats)  # (N, 512, 10, 10),  (N, 256, 5, 5), (N, 256, 3, 3), (N, 256, 1, 1)
+            
+            # Run prediction convolutions (predict offsets w.r.t prior-boxes and classes in each resulting localization box)
+            locs, classes_scores = self.pred_convs(conv4_3_feats, conv7_feats, conv8_2_feats, conv9_2_feats, conv10_2_feats,
+                                               conv11_2_feats)  # (N, 8732, 4), (N, 8732, n_classes)
+            
         
-                        
+            return locs, classes_scores
+
+                 
             
             
         
