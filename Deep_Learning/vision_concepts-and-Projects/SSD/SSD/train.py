@@ -25,9 +25,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Learning parameters
 checkpoint = None  # path to model checkpoint, None if none
-batch_size = 2  # batch size
+batch_size = 6  # batch size
 iterations = 120000  # number of iterations to train
-workers = 2  # number of workers for loading data in the DataLoader
+workers = 2 # number of workers for loading data in the DataLoader
 print_freq = 200  # print training status every __ batches
 lr = 1e-3  # learning rate
 decay_lr_at = [80000, 100000]  # decay learning rate after these many iterations
@@ -83,10 +83,13 @@ def main():
     # Calculate total number of epochs to train and the epochs to decay learning rate at (i.e. convert iterations to epochs)
     # To convert iterations to epochs, divide iterations by the number of iterations per epoch
     # The paper trains for 120,000 iterations with a batch size of 32, decays after 80,000 and 100,000 iterations
-    epochs = iterations // (len(train_dataset) // 32)
+    
+    # epochs = iterations // (len(train_dataset) // 32)
+    epochs = 10
     decay_lr_at = [it // (len(train_dataset) // 32) for it in decay_lr_at]
 
     # Epochs
+    print(start_epoch)
     for epoch in range(start_epoch, epochs):
 
         # Decay learning rate at particular epochs
