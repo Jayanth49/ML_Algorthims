@@ -145,7 +145,7 @@ def create_data_lists(voc07_path, voc07_test, output_folder):
 #create_data_lists(r"D:\GitHub\Introductory_excersices_ml\Deep_Learning\vision_concepts-and-Projects\SSD\SSD\VOCtrainval\VOCdevkit\VOC2007",r"D:\GitHub\Introductory_excersices_ml\Deep_Learning\vision_concepts-and-Projects\SSD\SSD\VOCtest\VOCdevkit\VOC2007",
 #                  r"D:\GitHub\Introductory_excersices_ml\Deep_Learning\vision_concepts-and-Projects\SSD\SSD\new")
         
-def xy_cxcy(xy):
+def xy_to_cxcy(xy):
     """
     Convert bounding boxes from boundary coordinates (x_min, y_min, x_max, y_max) to center-size coordinates (c_x, c_y, w, h).
     :param xy: bounding boxes in boundary coordinates, a tensor of size (n_boxes, 4)
@@ -155,7 +155,7 @@ def xy_cxcy(xy):
     return torch.cat([(xy[:,2:]+xy[:,:2])/2, #c_x,c_y
                       xy[:,2:]-xy[:,:2]],1) # w,h
 
-def cxcy_xy(cxcy):
+def cxcy_to_xy(cxcy):
     """
     Convert bounding boxes from center-size coordinates (c_x, c_y, w, h) to boundary coordinates (x_min, y_min, x_max, y_max).
     :param cxcy: bounding boxes in center-size coordinates, a tensor of size (n_boxes, 4)
@@ -164,7 +164,7 @@ def cxcy_xy(cxcy):
     return torch.cat([cxcy[:,:2]-cxcy[:,2:]/2, #xmin,ymin
                       cxcy[:,:2]+cxcy[:,2:]/2],1) #xmax,ymax
 
-def cxcy_gcxgcy(cxcy,priors_cxcy):
+def cxcy_to_gcxgcy(cxcy,priors_cxcy):
     """
     Encode bounding boxes (that are in center-size form) w.r.t. the corresponding prior boxes (that are in center-size form).
     
@@ -184,7 +184,7 @@ def cxcy_gcxgcy(cxcy,priors_cxcy):
     return torch.cat([(cxcy[:,:2]-priors_cxcy[:,:2])/(priors_cxcy[:,2:]/10), # g_c_x,g_c_y 
                       torch.log(cxcy[:,2:]/priors_cxcy[:,2:]*5)],1) # g_w,G-h
 
-def gcxgcy_cxcy(gcxgcy,priors_cxcy):
+def gcxgcy_to_cxcy(gcxgcy,priors_cxcy):
     """
     Decode bounding box coordinates predicted by the model, since they are encoded in the form mentioned above.
     
