@@ -17,7 +17,7 @@ pp = PrettyPrinter()
 # Parameters
 data_folder = './'
 keep_difficult = True  # difficult ground truth objects must always be considered in mAP calculation, because these objects DO exist!
-batch_size = 64
+batch_size = 5
 workers = 4
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 checkpoint = './checkpoint_ssd300.pth.tar'
@@ -27,6 +27,7 @@ checkpoint = torch.load(checkpoint)
 model = checkpoint['model']
 model = model.to(device)
 
+# print(model)
 # Switch to eval mode
 model.eval()
 

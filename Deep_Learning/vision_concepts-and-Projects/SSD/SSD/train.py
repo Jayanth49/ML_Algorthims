@@ -24,10 +24,11 @@ n_classes = len(label_map)  # number of different types of objects
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Learning parameters
-checkpoint = None  # path to model checkpoint, None if none
-batch_size = 6  # batch size
+# checkpoint = None  # path to model checkpoint, None if none
+checkpoint = './checkpoint_ssd300.pth.tar'
+batch_size = 5  # batch size
 iterations = 120000  # number of iterations to train
-workers = 2 # number of workers for loading data in the DataLoader
+workers = 4 # number of workers for loading data in the DataLoader
 print_freq = 200  # print training status every __ batches
 lr = 1e-3  # learning rate
 decay_lr_at = [80000, 100000]  # decay learning rate after these many iterations
@@ -85,7 +86,7 @@ def main():
     # The paper trains for 120,000 iterations with a batch size of 32, decays after 80,000 and 100,000 iterations
     
     # epochs = iterations // (len(train_dataset) // 32)
-    epochs = 10
+    epochs = 5
     decay_lr_at = [it // (len(train_dataset) // 32) for it in decay_lr_at]
 
     # Epochs
