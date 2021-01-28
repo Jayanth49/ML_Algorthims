@@ -202,10 +202,77 @@ class AuxiliaryConvolutions(nn.Module):
         return conv8_2_feats,conv9_2_feats,conv10_2_feats,conv11_2_feats
     
 
+class PredictionConvolutions(nn.Module):
+    """
+    Convolutions to predict class scores and bounding boxes using lower and higher-level feature maps.
+    
+    The bounding boxes (locations) are predicted as encoded offsets w.r.t each of the 8732 prior (default) boxes.
+    See 'cxcy_to_gcxgcy' in utils.py for the encoding definition.
+    
+    The class scores represent the scores of each object class in each of the 8732 bounding boxes located.
+    A high score for 'background' = no object.
+    """
+    
+    def __init__(self,n_classes):
+        """
+        :param n_classes: number of different types of objects
+        """
+        super(PredictionConvolutions,self).init()
+
+        self.n_classes = n_classes
         
+        # Number of prior-boxes we are considering per position in each feature map
+        n_boxes = {'conv4_3': 4,
+                   'conv7': 6,
+                   'conv8_2': 6,
+                   'conv9_2': 6,
+                   'conv10_2': 4,
+                   'conv11_2': 4}
+        # 4 prior-boxes implies we use 4 different aspect ratios, etc.
         
+        # Localization prediction convolutions (predict offsets w.r.t prior-boxes)
+        self.loc_conv4_3 = nn.Conv2d(512, n_boxes['conv4_3']*4,kernel_size=3,padding=1)
+        self.loc_conv7 = nn.Conv2d(1024,n_boxes['conv7']*4,kernel_size=3,padding=1)
+        self.loc_conv8_2 = nn.Conv2d(512,n_boxes['conv8_2']*4,kernel_size=3,padding=1)
+        self.loc_conv9_2 = nn.Conv2d(256,n_boxes['conv9_2']*4,kernel_size=3,padding=1)
+        self.loc_conv10_2 = nn.Conv2d(256,n_boxes['conv10_2']*4,kernel_size=3,padding=1)
+        self.loc_conv11_2 = nn.Conv2d(256,n_boxes['conv11_2']*4,kernel_size=3,padding=1)
         
+        # Class prediction convolutions (predict classes in localization boxes)
+        self.cl_conv4_3 = nn.Conv2d(512, n_boxes['conv4_3']*n_classes,kernel_size=3,padding=1)
+        self.cl_conv7 = nn.Conv2d(1024,n_boxes['conv7']*n_classes,kernel_size=3,padding=1)
+        self.cl_conv8_2 = nn.Conv2d(512,n_boxes['conv8_2']*n_classes,kernel_size=3,padding=1)
+        self.cl_conv9_2 = nn.Conv2d(256,n_boxes['conv9_2']*n_classes,kernel_size=3,padding=1)
+        self.cl_conv10_2 = nn.Conv2d(256,n_boxes['conv10_2']*n_classes,kernel_size=3,padding=1)
+        self.cl_conv11_2 = nn.Conv2d(256,n_boxes['conv11_2']*n_classes,kernel_size=3,padding=1)
         
+        #Initilise parameters
+        self.init_conv2d()
+        
+        def init_conv2d(self):
+            """
+            Initialize convolution parameters.
+            """
+            for c in self.children():
+                if isinstance(c, nn.Conv2d):
+                    nn.init.xavier_uniform_(c.weight)
+                    nn.init.constant_(c.bias, 0.)
+                    
+        def forward(self,conv4_3_feats,conv7_feats,conv8_2_feats,conv9_2_feats,conv10_2_feats,conv11_2_feats):
+            """
+            Forward propagation.
+            :param conv4_3_feats: conv4_3 feature map, a tensor of dimensions (N, 512, 38, 38)
+            :param conv7_feats: conv7 feature map, a tensor of dimensions (N, 1024, 19, 19)
+            :param conv8_2_feats: conv8_2 feature map, a tensor of dimensions (N, 512, 10, 10)
+            :param conv9_2_feats: conv9_2 feature map, a tensor of dimensions (N, 256, 5, 5)
+            :param conv10_2_feats: conv10_2 feature map, a tensor of dimensions (N, 256, 3, 3)
+            :param conv11_2_feats: conv11_2 feature map, a tensor of dimensions (N, 256, 1, 1)
+            :return: 8732 locations and class scores (i.e. w.r.t each prior box) for each image
+            """
+            
+            batch_size = conv4_3_feats.size(0)
+            
+            
         
         
         
