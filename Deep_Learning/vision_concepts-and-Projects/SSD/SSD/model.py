@@ -334,6 +334,26 @@ class PredictionConvolutions(nn.Module):
             return locs,class_scores
         
         
+class SSD300(nn.Module):
+    """
+    The SSD300 network - encapsulates the base VGG network, auxiliary, and prediction convolutions.
+    """
+    def init(self, n_classes):
+        super(SSD300, self).__init__()
+        
+        self.n_classes = n_classes
+        
+        self.base = VGGBase()
+        self.aux_convs = AuxiliaryConvolutions()
+        self.pred_convs = PredictionConvolutions(n_classes)
+        
+        # Since lower level features (conv4_3_feats) have considerably larger scales, we take the L2 norm and rescale
+        # Rescale factor is initially set at 20, but is learned for each channel during back-prop
+        self.rescale_factors = nn.Parameter(torch.FloatTensor(1, 512, 1, 1))  # there are 512 channels in conv4_3_feats
+        nn.init.constant_(self.rescale_factors, 20)
+        
+        
+        
                         
             
             
