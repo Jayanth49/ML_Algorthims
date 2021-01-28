@@ -86,7 +86,7 @@ def main():
     # The paper trains for 120,000 iterations with a batch size of 32, decays after 80,000 and 100,000 iterations
     
     # epochs = iterations // (len(train_dataset) // 32)
-    epochs = 5
+    epochs = 10
     decay_lr_at = [it // (len(train_dataset) // 32) for it in decay_lr_at]
 
     # Epochs
