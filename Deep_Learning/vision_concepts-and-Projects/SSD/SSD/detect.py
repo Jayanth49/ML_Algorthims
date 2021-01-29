@@ -10,6 +10,8 @@ from torchvision import transforms
 from utils import *
 from PIL import Image, ImageDraw, ImageFont
 
+import cv2
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load model checkpoint
@@ -104,7 +106,9 @@ def detect(original_image, min_score, max_overlap, top_k, suppress=None):
 
 if __name__ == '__main__':
     # img_path = '/media/ssd/ssd data/VOC2007/JPEGImages/000001.jpg'
-    path = 'D:/GitHub/Introductory_excersices_ml/Deep_Learning/vision_concepts-and-Projects/SSD/SSD/000002.jpg'
+    path = 'D:/GitHub/Introductory_excersices_ml/Deep_Learning/vision_concepts-and-Projects/SSD/SSD/000001.jpg'
     original_image = Image.open(path, mode='r')
     original_image = original_image.convert('RGB')
-    detect(original_image, min_score=0.2, max_overlap=0.5, top_k=200).show()
+    A = detect(original_image, min_score=0.2, max_overlap=0.5, top_k=200)
+    A.save('out1.bmp')
+    A.show()
