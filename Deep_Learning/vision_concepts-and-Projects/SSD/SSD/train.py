@@ -21,16 +21,16 @@ keep_difficult = True  # use objects considered difficult to detect?
 # Model parameters
 # Not too many here since the SSD300 has a very specific structure
 n_classes = len(label_map)  # number of different types of objects
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Learning parameters
-# checkpoint = None  # path to model checkpoint, None if none
-checkpoint = './checkpoint_ssd300.pth.tar'
+checkpoint = None  # path to model checkpoint, None if none
+# checkpoint = './checkpoint_ssd300.pth.tar'
 batch_size = 5  # batch size
 iterations = 120000  # number of iterations to train
 workers = 4 # number of workers for loading data in the DataLoader
 print_freq = 200  # print training status every __ batches
-lr = 1e-3  # learning rate
+lr = 9e-3  # learning rate
 decay_lr_at = [80000, 100000]  # decay learning rate after these many iterations
 decay_lr_to = 0.1  # decay learning rate to this fraction of the existing learning rate
 momentum = 0.9  # momentum
@@ -86,7 +86,7 @@ def main():
     # The paper trains for 120,000 iterations with a batch size of 32, decays after 80,000 and 100,000 iterations
     
     # epochs = iterations // (len(train_dataset) // 32)
-    epochs = 10
+    epochs = 25
     decay_lr_at = [it // (len(train_dataset) // 32) for it in decay_lr_at]
 
     # Epochs
@@ -164,6 +164,9 @@ def train(train_loader, model, criterion, optimizer, epoch):
                   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(epoch, i, len(train_loader),
                                                                   batch_time=batch_time,
                                                                   data_time=data_time, loss=losses))
+            print('device count',torch.cuda.device_count)
+            print('current gpu',torch.cuda.current_device)
+            
     del predicted_locs, predicted_scores, images, boxes, labels  # free some memory since their histories may be stored
 
 
