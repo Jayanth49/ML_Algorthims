@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['datasets.py', 'model.py', 'train.py', 'utils.py', 'eval.py', 'detect.py', 'video.py', '..\\..\\..\\..\\..\\..\\materials\\SEMESTER#6\\OPTIMIZATION\\ma18btech11004_lab3.py', '..\\..\\..\\..\\..\\..\\materials\\SEMESTER#6\\OPTIMIZATION\\ma18btech11004_lab_2.py']
+recent_files = ['C:\\Users\\Jayanth\\.spyder-py3\\temp.py', '..\\..\\..\\..\\..\\..\\materials\\SEMESTER#6\\OPTIMIZATION\\ma18btech11004_lab_4.py', '..\\..\\..\\..\\..\\..\\materials\\SEMESTER#6\\OPTIMIZATION\\ma18btech11004_lab_5.py', '..\\..\\..\\..\\..\\..\\materials\\SEMESTER#6\\OPTIMIZATION\\ma18btech11004_lab3.py']
 
