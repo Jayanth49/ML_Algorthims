@@ -9,4 +9,13 @@
 * The solution to a game is a Nash equilibrium. Here, we use the terminology of local differential Nash equilibria.That is optimal G,D that is a local minimum of JD wrt to D and JG wrt to G.
 * **THE GENERATOR:**
   * The generator is simply a differentiable function G. When z is sampled from some simple prior distribution, G(z) yields a sample of x drawn from p_model.
-  * 
+
+
+
+* real_x,real_y => Real-Image and Ones
+* Pass through Discriminator try to make output 1=>Real
+
+* Now fake_x,fake_y=>fake-Image and zeros
+* Pass though Discriminator try to make output 0=> Fake
+
+* Now generator's Work:=> Try to generate something that has y==>1
