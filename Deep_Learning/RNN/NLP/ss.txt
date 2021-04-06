@@ -1,0 +1,21 @@
+Data --> Tokenization --> Vocabulary --> Corpus ==> preprocessed data
+
+Word2vec --> skip-gram (n) Continous bag of words
+
+
+--------------- Computation Graphs
+--------------- Notes
+ 
+One-hot-encoded:
+
+* very big
+* can't get similarity ( for large biggy vectors)
+
+* Thus we need to write words such that similarity is obtained.
+
+Word-Embedding:
+
+* Word2vec is framework for learning word vectors.
+* 
+
+
